@@ -19,7 +19,16 @@ import {
 } from "./services.js";
 export const app = express();
 if (env.TRUST_PROXY_HOPS) app.set("trust proxy", env.TRUST_PROXY_HOPS);
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        "img-src": ["'self'", "data:", "https://i.ytimg.com"],
+        "frame-src": ["'self'", "https://www.youtube-nocookie.com"],
+      },
+    },
+  }),
+);
 app.use("/api", (req, res, next) => {
   const origin = req.headers.origin;
   if (origin && !sameOrigin(origin, env.FRONTEND_URL)) {

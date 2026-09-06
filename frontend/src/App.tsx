@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "./lib/api";
 import { tracks, projects, money, type Track } from "./content";
-import { Arrow, Mark, Modal, MotionArtwork, TelegramIcon } from "./components";
+import { Arrow, Mark, MotionArtwork, TelegramIcon } from "./components";
 import { Enrollment, Recovery, AccessPage } from "./Enrollment";
 
 export function App() {
@@ -159,33 +159,129 @@ export function App() {
                 ))}
               </div>
             </section>
-            {projects.length > 0 && (
-              <section className="work-section wrap" id="work">
-                <div className="section-heading">
-                  <div>
-                    <span className="section-label">A little inspiration</span>
-                    <h2>See ideas come alive.</h2>
+            <section className="creator-section wrap" id="creator">
+              <div className="creator-intro">
+                <div className="creator-identity">
+                  <div className="creator-portrait">
+                    <img src="/assets/pfp.jpg" alt="Algebra" loading="lazy" />
                   </div>
-                  <p>A selection of work made with AI.</p>
+                  <div>
+                    <span className="section-label">Your creator</span>
+                    <strong>Algebra</strong>
+                    <a
+                      href="https://t.me/CallMeAlgy"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      @CallMeAlgy ↗
+                    </a>
+                  </div>
                 </div>
+                <div className="creator-lede">
+                  <span className="section-label">The story behind the lab</span>
+                  <h2>
+                    From crypto to
+                    <br />
+                    <em>AI filmmaking.</em>
+                  </h2>
+                  <p>
+                    I’m Algebra, a creator and AI filmmaker focused on using AI
+                    to create compelling stories, cinematic experiences and
+                    visuals that actually connect.
+                  </p>
+                </div>
+              </div>
+              <div className="creator-story">
+                <div>
+                  <p>
+                    I started exploring AI about a year ago, initially
+                    experimenting with creative tools and content. Since then,
+                    I’ve gone from simple AI generations to creating cinematic
+                    animations, storytelling pieces, brand visuals and
+                    promotional content.
+                  </p>
+                  <p>
+                    My background in crypto and Web3 taught me how to create for
+                    a fast-growing digital space, but I didn’t want my creativity
+                    to stop there.
+                  </p>
+                  <strong className="creator-turn">So I expanded.</strong>
+                </div>
+                <div>
+                  <p>
+                    Today, I combine AI, animation, storytelling and creative
+                    strategy to create content for both Web3 and Web2 brands,
+                    while helping others learn how to do the same.
+                  </p>
+                  <p>
+                    AI Motion Lab is an extension of that journey — showing you
+                    how to take an idea, build it with AI and turn it into
+                    something you can actually show, share and monetize.
+                  </p>
+                  <p className="creator-closing">
+                    I started learning about a year ago. If I could get here,
+                    you can start too.
+                  </p>
+                </div>
+              </div>
+              {projects.length > 0 && (
+                <div className="creator-work" id="work">
                 <div className="work-grid">
                   {projects.map((p) => (
                     <article key={p.youtubeId}>
-                      <button
-                        className="video-preview"
-                        onClick={() => setVideo(p.youtubeId)}
-                        aria-label={`Play ${p.title}`}
-                      >
-                        <img src={p.poster} alt="" loading="lazy" />
-                        <span className="play-icon">▶</span>
-                      </button>
+                      {video === p.youtubeId ? (
+                        <iframe
+                          className="video-player"
+                          src={`https://www.youtube-nocookie.com/embed/${p.youtubeId}?autoplay=1&rel=0`}
+                          title={p.title}
+                          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                          allowFullScreen
+                          referrerPolicy="strict-origin-when-cross-origin"
+                        />
+                      ) : (
+                        <button
+                          className="video-preview"
+                          onClick={() => setVideo(p.youtubeId)}
+                          aria-label={`Play ${p.title}`}
+                        >
+                          <img
+                            src={p.poster}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                            onError={(event) => {
+                              event.currentTarget.onerror = null;
+                              event.currentTarget.src = `https://i.ytimg.com/vi/${p.youtubeId}/hqdefault.jpg`;
+                            }}
+                          />
+                          <span className="play-icon">▶</span>
+                        </button>
+                      )}
                       <h3>{p.title}</h3>
-                      <p>{p.caption}</p>
+                      <div className="project-description">
+                        <p className="project-summary">{p.summary}</p>
+                        <p className="project-detail">{p.detail}</p>
+                        {p.amount ? (
+                          <>
+                            <p className="project-outcome">{p.result}</p>
+                            <div className="project-result">
+                              <span>{p.resultLabel}</span>
+                              <strong>{p.amount}</strong>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="project-result">
+                            <span>{p.resultLabel}</span>
+                            <p>{p.result}</p>
+                          </div>
+                        )}
+                      </div>
                     </article>
                   ))}
                 </div>
-              </section>
-            )}
+                </div>
+              )}
+            </section>
             <section className="program-section" id="programs">
               <div className="wrap">
                 <div className="section-heading">
@@ -406,18 +502,6 @@ export function App() {
           emailEnabled={emailEnabled}
         />
       )}{" "}
-      {video && (
-        <Modal close={() => setVideo(undefined)} label="Watch project">
-          <iframe
-            className="video-player"
-            src={`https://www.youtube-nocookie.com/embed/${video}?autoplay=1`}
-            title="AI Motion Lab project"
-            allow="autoplay; encrypted-media; picture-in-picture"
-            allowFullScreen
-            referrerPolicy="strict-origin-when-cross-origin"
-          />
-        </Modal>
-      )}
     </>
   );
 }
