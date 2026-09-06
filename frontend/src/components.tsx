@@ -26,16 +26,7 @@ export function Arrow({ diagonal = false }: { diagonal?: boolean }) {
   );
 }
 export function Mark() {
-  return (
-    <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
-      <path
-        d="m4 30 9-20 7 15 7-15 9 20M9 30l11-7 11 7"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
+  return <img src="/assets/logo.JPG" alt="" aria-hidden="true" />;
 }
 export function Modal({
   children,

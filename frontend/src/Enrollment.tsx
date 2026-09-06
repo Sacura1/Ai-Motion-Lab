@@ -220,46 +220,53 @@ export function AccessPage({
   }, []);
   return (
     <section className="access-page wrap">
-      <span className="section-label">Your next chapter</span>
-      <h1>
-        {result
-          ? "You’re in."
-          : token
-            ? "Ready when you are."
-            : "One last check."}
-      </h1>
-      <p>
-        {result
-          ? `Your ${result.track} enrollment is confirmed. Your Telegram invitation is ready.`
-          : "Confirm your enrollment to get your invitation to the group."}
-      </p>
       {result ? (
-        <a
-          className="button primary"
-          href={result.telegramUrl}
-          rel="noreferrer"
-        >
-          Join on Telegram
-          <Arrow diagonal />
-        </a>
+        <div className="success-panel" role="status">
+          <span className="success-check" aria-hidden="true">✓</span>
+          <span className="section-label">Payment confirmed</span>
+          <h1>You’re in.</h1>
+          <p>
+            Your {result.track} enrollment is confirmed. Your private Telegram
+            invitation is ready.
+          </p>
+          <a
+            className="button primary"
+            href={result.telegramUrl}
+            rel="noreferrer"
+          >
+            Join the Telegram channel
+            <Arrow diagonal />
+          </a>
+          <p className="invite-note">
+            This invitation admits one member and expires after 24 hours. Once
+            one person has joined, nobody else can use it—please don’t share it.
+          </p>
+        </div>
       ) : (
-        <button className="button primary" disabled={busy} onClick={verify}>
-          {busy
-            ? "Checking your payment…"
-            : token
-              ? "Get my invitation"
-              : "Check payment"}
-          <Arrow />
-        </button>
+        <>
+          <span className="section-label">Your next chapter</span>
+          <h1>{token ? "Ready when you are." : "One last check."}</h1>
+          <p>Confirm your enrollment to get your invitation to the channel.</p>
+          <button className="button primary" disabled={busy} onClick={verify}>
+            {busy
+              ? "Checking your payment…"
+              : token
+                ? "Get my invitation"
+                : "Check payment"}
+            <Arrow />
+          </button>
+        </>
       )}
       {error && (
         <p role="alert" className="error">
           {error}
         </p>
       )}
-      <button className="text-button" onClick={recover}>
-        {emailEnabled ? "Retrieve access by email" : "Get access help"}
-      </button>
+      {!result && (
+        <button className="text-button" onClick={recover}>
+          {emailEnabled ? "Retrieve access by email" : "Get access help"}
+        </button>
+      )}
       <a className="text-button" href="/">
         Back to AI Motion Lab
       </a>

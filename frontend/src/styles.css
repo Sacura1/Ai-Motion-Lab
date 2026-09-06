@@ -93,9 +93,11 @@ button:disabled {
   letter-spacing: 0.045em;
   white-space: nowrap;
 }
-.brand svg {
+.brand img {
   width: 37px;
   height: 37px;
+  object-fit: cover;
+  border-radius: 50%;
 }
 .brand-dot {
   vertical-align: super;
@@ -581,8 +583,9 @@ p {
 .site-footer > .brand {
   font-size: 11px;
 }
-.site-footer > .brand svg {
+.site-footer > .brand img {
   width: 29px;
+  height: 29px;
 }
 .site-footer > span {
   font-size: 11px;
@@ -782,6 +785,44 @@ form .button {
 .access-page .button {
   min-width: 260px;
 }
+.success-panel {
+  width: min(100%, 610px);
+  padding: clamp(28px, 6vw, 62px);
+  border: 1px solid #2b2419;
+  background:
+    radial-gradient(circle at 50% 0%, #ffb54712, transparent 42%), #050505;
+}
+.success-panel .section-label {
+  margin: 22px 0 14px;
+}
+.success-panel h1 {
+  margin: 0 0 18px;
+}
+.success-panel > p:not(.invite-note) {
+  max-width: 470px;
+}
+.success-panel .button {
+  width: 100%;
+  margin-top: 30px;
+}
+.success-check {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #ffb547;
+  border-radius: 50%;
+  color: #ffb547;
+  font-size: 18px;
+}
+.success-panel .invite-note {
+  margin: 17px 0 0;
+  padding-left: 14px;
+  border-left: 1px solid #6b4c25;
+  color: #b9b2a8;
+  font-size: 11px;
+  line-height: 1.7;
+}
 @media (min-width: 1600px) {
   .hero h1 {
     font-size: 112px;
@@ -837,7 +878,7 @@ form .button {
     font-size: 11px;
     gap: 7px;
   }
-  .brand svg {
+  .brand img {
     width: 29px;
     height: 29px;
   }

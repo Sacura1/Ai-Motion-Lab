@@ -24,10 +24,12 @@
   inset: -35%;
   background: radial-gradient(circle, #000 15%, #000d 35%, transparent 70%);
 }
-.motion-logo svg {
+.motion-logo img {
   position: relative;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
   filter: drop-shadow(0 0 12px #ffb54755);
 }
 .frame-light {

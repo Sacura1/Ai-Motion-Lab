@@ -2,7 +2,9 @@ import express from "express";
 import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
 import { z } from "zod";
+import { fileURLToPath } from "node:url";
 import { catalog, configured, env, emailConfigured } from "./config.js";
+import { sameOrigin } from "./cors.js";
 import { pool, transaction, type Order } from "./db.js";
 import { newToken, validWebhook } from "./security.js";
 import {
@@ -18,6 +20,24 @@ import {
 export const app = express();
 if (env.TRUST_PROXY_HOPS) app.set("trust proxy", env.TRUST_PROXY_HOPS);
 app.use(helmet());
+app.use("/api", (req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && !sameOrigin(origin, env.FRONTEND_URL)) {
+    res.status(403).json({ error: "This website is not allowed to use the payment API." });
+    return;
+  }
+  if (origin) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.vary("Origin");
+  }
+  if (req.method === "OPTIONS") {
+    res.sendStatus(204);
+    return;
+  }
+  next();
+});
 app.use("/api", (_req, res, next) => {
   res.setHeader("Cache-Control", "no-store");
   next();
@@ -187,8 +207,21 @@ app.post("/api/access/redeem", async (req, res) => {
     .parse(req.body);
   res.json(await redeemAccess(token));
 });
-app.use((_req, res) => {
+app.use("/api", (_req, res) => {
   res.status(404).json({ error: "Endpoint not found." });
+});
+const frontendDist = fileURLToPath(
+  new URL("../../frontend/dist/", import.meta.url),
+);
+app.use(express.static(frontendDist));
+app.use((req, res, next) => {
+  if (req.method !== "GET") {
+    next();
+    return;
+  }
+  res.sendFile("index.html", { root: frontendDist }, (error) => {
+    if (error) next(error);
+  });
 });
 const onError: express.ErrorRequestHandler = (error, _req, res, _next) => {
   if (error instanceof z.ZodError || error instanceof SyntaxError) {
