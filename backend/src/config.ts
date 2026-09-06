@@ -11,7 +11,8 @@ export const env = z
     TELEGRAM_MASTERCLASS_CHAT_ID: z.string().default(""),
     RESEND_API_KEY: z.string().default(""),
     EMAIL_FROM: z.string().default(""),
-    TRUST_PROXY_HOPS: z.coerce.number().int().min(0).default(0),
+    // Railway places one trusted reverse proxy in front of the service.
+    TRUST_PROXY_HOPS: z.coerce.number().int().min(0).default(1),
   })
   .parse(process.env);
 export const catalog = {

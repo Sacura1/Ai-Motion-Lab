@@ -12,12 +12,6 @@ export function Enrollment({
   const [selected, setSelected] = useState(track);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [ready, setReady] = useState<boolean>();
-  useEffect(() => {
-    api<{ ready: boolean }>("/offer")
-      .then((r) => setReady(r.ready))
-      .catch(() => setError("Unable to connect. Please try again shortly."));
-  }, []);
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setBusy(true);
@@ -82,12 +76,6 @@ export function Enrollment({
           {busy ? "Opening Paystack…" : `Pay ${money(tracks[selected].price)}`}
           <Arrow />
         </button>
-        {ready === false && (
-          <p className="notice">
-            Checkout is still confirming availability. You can try the payment
-            button again now.
-          </p>
-        )}
         {error && (
           <p className="error" role="alert">
             {error}

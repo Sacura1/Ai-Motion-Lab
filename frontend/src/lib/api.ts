@@ -1,9 +1,19 @@
-// Vite replaces this value during the frontend build. Accept either
-// https://api.example.com or https://api.example.com/api to avoid /api/api.
-const API_URL = (import.meta.env.VITE_API_URL || "")
-  .trim()
-  .replace(/\/+$/, "")
-  .replace(/\/api$/i, "");
+// Vite replaces this value during the frontend build. A bare production
+// hostname is upgraded to HTTPS so it cannot become a path on the website.
+function normalizeApiUrl(value: string | undefined) {
+  const configured = (value || "")
+    .trim()
+    .replace(/^\/+/, "")
+    .replace(/\/+$/, "")
+    .replace(/\/api$/i, "");
+
+  if (!configured) return "";
+  return /^https?:\/\//i.test(configured)
+    ? configured
+    : `https://${configured}`;
+}
+
+const API_URL = normalizeApiUrl(import.meta.env.VITE_API_URL);
 
 export async function api<T>(
   path: string,

@@ -232,7 +232,10 @@ const onError: express.ErrorRequestHandler = (error, _req, res, _next) => {
     res.status(error.status).json({ error: error.message });
     return;
   }
-  console.error("API request failed.");
+  console.error(
+    "API request failed.",
+    error instanceof Error ? error.stack || error.message : error,
+  );
   res.status(503).json({
     error: "The service is temporarily unavailable. Please try again shortly.",
   });
