@@ -116,13 +116,16 @@ async function invitation(client: pg.PoolClient, reference: string) {
   )
     return { telegramUrl: order.invite_url, track: catalog[order.track].name };
   const expires = Math.floor(Date.now() / 1000) + 24 * 60 * 60;
+  // Read the current configured destination when creating the invite. This lets
+  // an organizer correct a channel ID and retry an already-paid enrollment.
+  const chatId = catalog[order.track].chatId || order.chat_id;
   const response = await fetch(
     `https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/createChatInviteLink`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        chat_id: order.chat_id,
+        chat_id: chatId,
         name: `AML ${reference.slice(0, 20)}`,
         expire_date: expires,
         member_limit: 1,
@@ -132,13 +135,19 @@ async function invitation(client: pg.PoolClient, reference: string) {
   );
   const data = (await response.json()) as {
     ok: boolean;
+    error_code?: number;
+    description?: string;
     result?: { invite_link: string };
   };
-  if (!response.ok || !data.ok || !data.result)
+  if (!response.ok || !data.ok || !data.result) {
+    console.error(
+      `Telegram invite failed for ${order.track}: ${data.description || `HTTP ${response.status}`}`,
+    );
     throw new HttpError(
       503,
       "Your payment is confirmed, but Telegram is temporarily unavailable. Please keep this page open and retry shortly.",
     );
+  }
   const url = new URL(data.result.invite_link);
   if (url.protocol !== "https:" || url.hostname !== "t.me")
     throw new Error("Invalid Telegram response");
