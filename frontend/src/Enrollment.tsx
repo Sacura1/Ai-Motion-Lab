@@ -78,13 +78,14 @@ export function Enrollment({
         <p className="input-hint">
           Your email identifies your payment and enrollment.
         </p>
-        <button className="button primary" disabled={busy || ready !== true}>
+        <button className="button primary" disabled={busy}>
           {busy ? "Opening Paystack…" : `Pay ${money(tracks[selected].price)}`}
           <Arrow />
         </button>
         {ready === false && (
           <p className="notice">
-            Enrollment opens soon. Please check back for payment availability.
+            Checkout is still confirming availability. You can try the payment
+            button again now.
           </p>
         )}
         {error && (
