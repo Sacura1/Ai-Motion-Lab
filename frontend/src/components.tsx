@@ -28,6 +28,18 @@ export function Arrow({ diagonal = false }: { diagonal?: boolean }) {
 export function Mark() {
   return <img src="/assets/logo.JPG" alt="" aria-hidden="true" />;
 }
+export function TelegramIcon() {
+  return (
+    <svg
+      className="telegram-icon"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M21.7 3.3 18.6 19c-.2 1.1-.8 1.4-1.7.9l-4.7-3.5-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.8 8.8-8c.4-.3-.1-.5-.6-.2L6.5 13 1.8 11.5c-1-.3-1-1 .2-1.5L20.3 3c.9-.3 1.6.2 1.4.3Z" />
+    </svg>
+  );
+}
 export function Modal({
   children,
   close,

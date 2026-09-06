@@ -1,7 +1,12 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { api } from "./lib/api";
 import { tracks, money, type Track } from "./content";
-import { Arrow, Modal } from "./components";
+import { Arrow, Modal, TelegramIcon } from "./components";
+import {
+  clearPendingCheckout,
+  readPendingCheckout,
+  savePendingCheckout,
+} from "./lib/pendingCheckout";
 export function Enrollment({
   track,
   close,
@@ -12,20 +17,32 @@ export function Enrollment({
   const [selected, setSelected] = useState(track);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [pending, setPending] = useState(readPendingCheckout);
+  const submitting = useRef(false);
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (submitting.current) return;
+    submitting.current = true;
     setBusy(true);
     setError("");
     const data = new FormData(e.currentTarget);
     try {
-      const response = await api<{ authorizationUrl: string }>(
+      const response = await api<{ authorizationUrl: string; reference: string }>(
         "/payments/initialize",
         { name: data.get("name"), email: data.get("email"), track: selected },
       );
+      const checkout = {
+        ...response,
+        track: selected,
+        createdAt: Date.now(),
+      };
+      savePendingCheckout(checkout);
+      setPending(checkout);
       window.location.assign(response.authorizationUrl);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Unable to start checkout.");
       setBusy(false);
+      submitting.current = false;
     }
   }
   return (
@@ -37,54 +54,77 @@ export function Enrollment({
         creating.
       </h2>
       <p>Choose your track. Your invitation follows payment.</p>
-      <div className="track-picker" role="group" aria-label="Choose your track">
-        {Object.entries(tracks).map(([id, t]) => (
-          <button
-            key={id}
-            aria-pressed={selected === id}
-            onClick={() => setSelected(id as Track)}
-          >
-            {t.name}
-            <strong>{money(t.price)}</strong>
-          </button>
-        ))}
-      </div>
-      <form onSubmit={submit}>
-        <label htmlFor="name">Your name</label>
-        <input
-          id="name"
-          name="name"
-          autoComplete="name"
-          maxLength={100}
-          required
-          placeholder="Full name"
-        />
-        <label htmlFor="email">Email address</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          autoComplete="email"
-          maxLength={254}
-          required
-          placeholder="you@example.com"
-        />
-        <p className="input-hint">
-          Your email identifies your payment and enrollment.
-        </p>
-        <button className="button primary" disabled={busy}>
-          {busy ? "Opening Paystack…" : `Pay ${money(tracks[selected].price)}`}
-          <Arrow />
-        </button>
-        {error && (
-          <p className="error" role="alert">
-            {error}
-          </p>
-        )}
-        <span className="secure">
-          Secure checkout with Paystack · No account needed
-        </span>
-      </form>
+      {pending ? (
+        <div className="pending-checkout">
+          <span>You have an unfinished {tracks[pending.track].name} checkout.</span>
+          <div>
+            <a href={pending.authorizationUrl}>Continue checkout</a>
+            <a href={`/payment/callback?reference=${pending.reference}`}>
+              Check payment
+            </a>
+            <button
+              type="button"
+              onClick={() => {
+                clearPendingCheckout(pending.reference);
+                setPending(undefined);
+              }}
+            >
+              Start a new checkout
+            </button>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="track-picker" role="group" aria-label="Choose your track">
+            {Object.entries(tracks).map(([id, t]) => (
+              <button
+                key={id}
+                aria-pressed={selected === id}
+                onClick={() => setSelected(id as Track)}
+              >
+                {t.name}
+                <strong>{money(t.price)}</strong>
+              </button>
+            ))}
+          </div>
+          <form onSubmit={submit}>
+            <label htmlFor="name">Your name</label>
+            <input
+              id="name"
+              name="name"
+              autoComplete="name"
+              maxLength={100}
+              required
+              placeholder="Full name"
+            />
+            <label htmlFor="email">Email address</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              maxLength={254}
+              required
+              placeholder="you@example.com"
+            />
+            <p className="input-hint">
+              Your email identifies your payment and enrollment.
+            </p>
+            <button className="button primary" disabled={busy}>
+              {busy ? "Opening Paystack…" : `Pay ${money(tracks[selected].price)}`}
+              <Arrow />
+            </button>
+            {error && (
+              <p className="error" role="alert">
+                {error}
+              </p>
+            )}
+            <span className="secure">
+              Secure checkout with Paystack · No account needed
+            </span>
+          </form>
+        </>
+      )}
     </Modal>
   );
 }
@@ -120,12 +160,23 @@ export function Recovery({
       <span className="section-label">Welcome back</span>
       <h2>Find your way in.</h2>
       {!emailEnabled ? (
-        <p className="notice">
-          If you’ve already paid, return to your payment confirmation page to
-          get your Telegram invitation. If you no longer have it, contact the
-          program organizer with your checkout email and payment reference so
-          they can check your enrollment.
-        </p>
+        <>
+          <p className="notice">
+            If you’ve already paid, return to your payment confirmation page to
+            get your Telegram invitation. If you no longer have it, contact the
+            program organizer with your checkout email and payment reference so
+            they can check your enrollment.
+          </p>
+          <a
+            className="text-button telegram-contact"
+            href="https://t.me/CallMeAlgy"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <TelegramIcon />
+            Message @CallMeAlgy
+          </a>
+        </>
       ) : (
         <>
           <p>Enter the email you used at checkout. No password to remember.</p>
@@ -194,6 +245,7 @@ export function AccessPage({
           token ? { token } : { reference },
         ),
       );
+      if (reference) clearPendingCheckout(reference);
       // Keep the payment reference so a buyer can reload their confirmation
       // page even when email recovery is disabled. Remove consumed email tokens.
       if (token) window.history.replaceState({}, "", window.location.pathname);
@@ -223,7 +275,10 @@ export function AccessPage({
             href={result.telegramUrl}
             rel="noreferrer"
           >
-            Join the Telegram channel
+            <span className="telegram-button-label">
+              <TelegramIcon />
+              Join the Telegram channel
+            </span>
             <Arrow diagonal />
           </a>
           <p className="invite-note">

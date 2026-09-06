@@ -154,7 +154,7 @@ app.post("/api/payments/initialize", async (req, res) => {
   const url = new URL(data.authorization_url);
   if (url.protocol !== "https:" || url.hostname !== "checkout.paystack.com")
     throw new Error("Invalid checkout URL");
-  res.json({ authorizationUrl: url.href });
+  res.json({ authorizationUrl: url.href, reference });
 });
 app.post("/api/payments/verify", async (req, res) => {
   const { reference } = z

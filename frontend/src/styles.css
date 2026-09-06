@@ -600,8 +600,15 @@ p {
   align-items: center;
   font-size: 11px;
 }
-.site-footer > .text-button {
+.telegram-contact {
+  margin-top: 18px;
+  color: var(--accent);
+}
+.footer-actions {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 25px;
 }
 .site-footer small {
   flex-basis: 100%;
@@ -749,6 +756,31 @@ input {
 form .button {
   margin-top: 12px;
 }
+.pending-checkout {
+  margin-top: 20px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.pending-checkout div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 8px;
+}
+.pending-checkout a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.pending-checkout button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #c7c1b8;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
 .secure {
   font-size: 9px;
   text-align: center;
@@ -804,6 +836,16 @@ form .button {
 .success-panel .button {
   width: 100%;
   margin-top: 30px;
+}
+.telegram-button-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.telegram-icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
 }
 .success-check {
   width: 44px;
@@ -1094,9 +1136,12 @@ form .button {
   .site-footer > span {
     font-size: 10px;
   }
-  .site-footer > .text-button {
+  .footer-actions {
     margin-left: 0;
     flex-basis: 100%;
+    width: 100%;
+    justify-content: space-between;
+    gap: 16px;
   }
   .site-footer small {
     margin-top: 0;

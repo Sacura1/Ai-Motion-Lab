@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "./lib/api";
 import { tracks, projects, money, type Track } from "./content";
-import { Arrow, Mark, Modal, MotionArtwork } from "./components";
+import { Arrow, Mark, Modal, MotionArtwork, TelegramIcon } from "./components";
 import { Enrollment, Recovery, AccessPage } from "./Enrollment";
 
 export function App() {
@@ -382,10 +382,21 @@ export function App() {
           <span>AI MOTION LAB</span>
         </a>
         <span>Ideas deserve to move.</span>
-        <button className="text-button" onClick={() => setRecovery(true)}>
-          {emailEnabled ? "Retrieve your access" : "Get access help"}
-          <Arrow diagonal />
-        </button>
+        <div className="footer-actions">
+          <a
+            className="text-button"
+            href="https://t.me/CallMeAlgy"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <TelegramIcon />
+            Contact us
+          </a>
+          <button className="text-button" onClick={() => setRecovery(true)}>
+            {emailEnabled ? "Retrieve your access" : "Get access help"}
+            <Arrow diagonal />
+          </button>
+        </div>
         <small>© {new Date().getFullYear()} AI Motion Lab</small>
       </footer>
       {track && <Enrollment track={track} close={() => setTrack(undefined)} />}{" "}
