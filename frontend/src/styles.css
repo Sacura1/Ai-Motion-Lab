@@ -307,10 +307,16 @@ p {
   padding-top: 27px;
 }
 .experience-icon {
-  font-size: 25px;
   color: var(--accent);
   display: block;
   margin-bottom: 25px;
+  width: 30px;
+  height: 30px;
+}
+.experience-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 .experience-grid h3 {
   font-size: 21px;
@@ -444,6 +450,15 @@ p {
 }
 .curriculum li span {
   color: var(--accent);
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+.curriculum li span svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 .program-outcome {
   border-top: 1px solid #292929;
@@ -522,8 +537,16 @@ p {
   display: none;
 }
 .faq-list summary span {
-  font-size: 22px;
   color: var(--accent);
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  transition: transform 0.2s ease;
+}
+.faq-list summary span svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 .faq-list details[open] summary span {
   transform: rotate(45deg);
@@ -662,6 +685,9 @@ p {
   font-size: 26px;
 }
 .creator-identity a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   width: fit-content;
   margin-top: 8px;
   color: var(--muted);
@@ -753,6 +779,19 @@ p {
   color: #171006;
   display: grid;
   place-items: center;
+}
+.play-icon svg {
+  display: block;
+  width: 25px;
+  height: 25px;
+  margin-left: 2px;
+}
+.inline-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  vertical-align: -0.18em;
 }
 .work-grid h3 {
   margin-top: 20px;
@@ -856,10 +895,15 @@ dialog::backdrop {
   top: 12px;
   background: none;
   border: 0;
-  font-size: 30px;
   color: #c8c8c8;
   width: 35px;
   height: 35px;
+  padding: 7px;
+}
+.close svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 .modal-inner h2 {
   font-size: 43px;
@@ -1019,7 +1063,10 @@ form .button {
   border: 1px solid #ffb547;
   border-radius: 50%;
   color: #ffb547;
-  font-size: 18px;
+}
+.success-check svg {
+  width: 21px;
+  height: 21px;
 }
 .success-panel .invite-note {
   margin: 17px 0 0;

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { api } from "./lib/api";
 import { tracks, money, type Track } from "./content";
-import { Arrow, Modal, TelegramIcon } from "./components";
+import { Arrow, CheckIcon, Modal, TelegramIcon } from "./components";
 import {
   clearPendingCheckout,
   readPendingCheckout,
@@ -263,7 +263,7 @@ export function AccessPage({
     <section className="access-page wrap">
       {result ? (
         <div className="success-panel" role="status">
-          <span className="success-check" aria-hidden="true">✓</span>
+          <span className="success-check" aria-hidden="true"><CheckIcon /></span>
           <span className="section-label">Payment confirmed</span>
           <h1>You’re in.</h1>
           <p>

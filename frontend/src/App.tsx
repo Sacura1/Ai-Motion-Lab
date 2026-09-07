@@ -1,7 +1,18 @@
 import { useEffect, useState } from "react";
 import { api } from "./lib/api";
 import { tracks, projects, money, type Track } from "./content";
-import { Arrow, Mark, MotionArtwork, TelegramIcon } from "./components";
+import {
+  Arrow,
+  CheckIcon,
+  DownIcon,
+  ExperienceIcon,
+  ExternalLinkIcon,
+  Mark,
+  MotionArtwork,
+  PlayIcon,
+  PlusIcon,
+  TelegramIcon,
+} from "./components";
 import { Enrollment, Recovery, AccessPage } from "./Enrollment";
 
 export function App() {
@@ -89,7 +100,7 @@ export function App() {
                     <Arrow diagonal />
                   </button>
                   <a className="inline-link" href="#programs">
-                    Explore the programs<span>↓</span>
+                    Explore the programs<DownIcon className="inline-icon" />
                   </a>
                 </div>
               </div>
@@ -134,24 +145,24 @@ export function App() {
               <div className="experience-grid">
                 {[
                   {
-                    icon: "↗",
+                    icon: "create" as const,
                     title: "Learn by making",
                     text: "Move from prompts to scenes. Put the techniques into practice as you learn.",
                   },
                   {
-                    icon: "◎",
+                    icon: "vision" as const,
                     title: "Build your visual language",
                     text: "Explore characters, camera movement and storytelling that make an idea feel like yours.",
                   },
                   {
-                    icon: "↔",
+                    icon: "community" as const,
                     title: "Create in good company",
                     text: "Join your track’s Telegram group and take part in live, shared learning.",
                   },
                 ].map((item) => (
                   <article key={item.title}>
                     <span className="experience-icon" aria-hidden="true">
-                      {item.icon}
+                      <ExperienceIcon kind={item.icon} />
                     </span>
                     <h3>{item.title}</h3>
                     <p>{item.text}</p>
@@ -173,7 +184,7 @@ export function App() {
                       target="_blank"
                       rel="noreferrer"
                     >
-                      @CallMeAlgy ↗
+                      @CallMeAlgy <ExternalLinkIcon className="inline-icon" />
                     </a>
                   </div>
                 </div>
@@ -254,7 +265,9 @@ export function App() {
                               event.currentTarget.src = `https://i.ytimg.com/vi/${p.youtubeId}/hqdefault.jpg`;
                             }}
                           />
-                          <span className="play-icon">▶</span>
+                          <span className="play-icon" aria-hidden="true">
+                            <PlayIcon />
+                          </span>
                         </button>
                       )}
                       <h3>{p.title}</h3>
@@ -343,7 +356,7 @@ export function App() {
                         <ul>
                           {t.skills.map((s) => (
                             <li key={s}>
-                              <span aria-hidden="true">✓</span>
+                              <span aria-hidden="true"><CheckIcon /></span>
                               {s}
                             </li>
                           ))}
@@ -435,7 +448,7 @@ export function App() {
                   <details key={item.q}>
                     <summary>
                       {item.q}
-                      <span aria-hidden="true">+</span>
+                      <span aria-hidden="true"><PlusIcon /></span>
                     </summary>
                     <p>{item.a}</p>
                   </details>
