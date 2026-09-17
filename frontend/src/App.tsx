@@ -1,6 +1,16 @@
 import { useEffect, useState } from "react";
 import { api } from "./lib/api";
-import { tracks, projects, money, type Track } from "./content";
+import {
+  tracks,
+  projects,
+  money,
+  cohortStart,
+  discountDeadline,
+  currentPrice,
+  getDiscountWindow,
+  isDiscountActive,
+  type Track,
+} from "./content";
 import {
   Arrow,
   CheckIcon,
@@ -17,6 +27,13 @@ import { Enrollment, Recovery, AccessPage } from "./Enrollment";
 
 export function App() {
   const [emailEnabled, setEmailEnabled] = useState(false);
+  const [now, setNow] = useState(Date.now);
+  const discountActive = isDiscountActive(now);
+  const discountWindow = getDiscountWindow(now);
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
   useEffect(() => {
     api<{ emailEnabled: boolean }>("/offer")
       .then((r) => setEmailEnabled(r.emailEnabled === true))
@@ -61,7 +78,7 @@ export function App() {
               <div className="hero-top">
                 <span className="cohort">
                   <i />
-                  Introducing our first cohort
+                  {cohortStart}
                 </span>
                 <span className="hero-side-note">
                   An independent space for
@@ -324,15 +341,36 @@ export function App() {
                             ? "01 / The foundation"
                             : "02 / The next level"}
                         </span>
-                        {id === "masterclass" && (
-                          <span className="badge">Go further</span>
-                        )}
+                        <div className="program-badges">
+                          {discountActive && (
+                            <span className="discount-badge">
+                              {t.discountPercent}% OFF
+                            </span>
+                          )}
+                          {id === "masterclass" && (
+                            <span className="badge">Go further</span>
+                          )}
+                        </div>
                       </div>
                       <h3>{t.name}</h3>
                       <p className="program-subtitle">{t.subtitle}</p>
-                      <div className="price">
-                        {money(t.price)}
-                        <span>one-time payment</span>
+                      <p className="program-cohort">{cohortStart}</p>
+                      <div className="pricing">
+                        {discountActive && (
+                          <div className="original-price">
+                            <span>{money(t.originalPrice)}</span>
+                            <strong>{t.discountPercent}% discount</strong>
+                          </div>
+                        )}
+                        <div className="price">
+                          {money(currentPrice(t, now))}
+                          <span>one-time payment</span>
+                        </div>
+                        {discountActive && (
+                          <p className="discount-deadline">
+                            {discountWindow} · {discountDeadline}
+                          </p>
+                        )}
                       </div>
                       <div className="duration">
                         <span>{t.weeks} weeks</span>

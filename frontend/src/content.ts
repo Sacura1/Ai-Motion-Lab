@@ -2,7 +2,9 @@ export type Track = "creator" | "masterclass";
 export const tracks = {
   creator: {
     name: "Creator",
-    price: 20000,
+    originalPrice: 20000,
+    price: 17000,
+    discountPercent: 15,
     weeks: 2,
     subtitle: "Your first idea. Your first film.",
     description:
@@ -17,7 +19,9 @@ export const tracks = {
   },
   masterclass: {
     name: "Masterclass",
-    price: 50000,
+    originalPrice: 50000,
+    price: 42500,
+    discountPercent: 15,
     weeks: 3,
     subtitle: "Create with a professional edge.",
     description:
@@ -33,6 +37,30 @@ export const tracks = {
     outcome: "Take your ideas into commercial production.",
   },
 };
+export const cohortStart = "Cohort 1 starts 1st October";
+export const discountDeadline = "24 September 2026";
+export const discountEndsAt = "2026-09-25T00:00:00+01:00";
+const discountDeadlineDay = Date.UTC(2026, 8, 24);
+const dayMs = 24 * 60 * 60 * 1000;
+export const isDiscountActive = (now = Date.now()) =>
+  now < Date.parse(discountEndsAt);
+export const currentPrice = (
+  track: { originalPrice: number; price: number },
+  now = Date.now(),
+) => (isDiscountActive(now) ? track.price : track.originalPrice);
+export function getDiscountWindow(now = Date.now()) {
+  if (!isDiscountActive(now)) return "";
+  // The launch offer follows Nigeria time (UTC+1). Nigeria does not observe DST.
+  const lagos = new Date(now + 60 * 60 * 1000);
+  const today = Date.UTC(
+    lagos.getUTCFullYear(),
+    lagos.getUTCMonth(),
+    lagos.getUTCDate(),
+  );
+  const daysLeft = Math.max(0, Math.round((discountDeadlineDay - today) / dayMs));
+  if (daysLeft === 0) return "Ends today";
+  return `Ends in ${daysLeft} day${daysLeft === 1 ? "" : "s"}`;
+}
 export const money = (amount: number) => `₦${amount.toLocaleString("en-NG")}`;
 export type Project = {
   title: string;

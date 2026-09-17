@@ -1498,3 +1498,106 @@ form .button {
     animation: none !important;
   }
 }
+
+/* Cohort 1 launch offer */
+.program-badges {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.discount-badge {
+  background: #ff5d5d18;
+  color: #ff9a9a;
+  padding: 6px 10px;
+  border: 1px solid #ff5d5d55;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+}
+.program-cohort {
+  width: fit-content;
+  margin-top: 15px;
+  padding: 7px 10px;
+  border: 1px solid #ffb54738;
+  border-radius: 999px;
+  color: #e9d4b5;
+  background: #ffb5470d;
+  font-size: 10px;
+  font-weight: 650;
+}
+.pricing {
+  margin-top: 30px;
+}
+.original-price {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+.original-price span {
+  color: #9e9992;
+  font-family: var(--display);
+  font-size: 18px;
+  letter-spacing: -0.035em;
+  text-decoration-line: line-through;
+  text-decoration-color: #ff5d5d;
+  text-decoration-thickness: 2px;
+}
+.original-price strong {
+  color: #ff9a9a;
+  font-family: Manrope, sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.pricing .price {
+  margin-top: 0;
+}
+.discount-deadline {
+  margin-top: 9px;
+  color: #ffcb7c;
+  font-size: 10px !important;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.track-picker .picker-cohort,
+.track-picker .picker-original,
+.track-picker small {
+  display: block;
+}
+.track-picker .picker-cohort {
+  margin-top: 7px;
+  color: #c7b79e;
+  font-size: 8px;
+  line-height: 1.4;
+}
+.track-picker .picker-original {
+  width: fit-content;
+  margin-top: 10px;
+  color: #8f8a83;
+  font-size: 11px;
+  text-decoration-line: line-through;
+  text-decoration-color: #ff5d5d;
+  text-decoration-thickness: 1.5px;
+}
+.track-picker strong {
+  margin-top: 2px;
+  color: #fff3df;
+}
+.track-picker small {
+  margin-top: 5px;
+  color: #ffcb7c;
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+@media (max-width: 600px) {
+  .program-badges {
+    gap: 6px;
+  }
+  .pricing {
+    margin-top: 27px;
+  }
+}

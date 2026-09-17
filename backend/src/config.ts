@@ -15,16 +15,23 @@ export const env = z
     TRUST_PROXY_HOPS: z.coerce.number().int().min(0).default(1),
   })
   .parse(process.env);
+export const discountEndsAt = Date.parse("2026-09-25T00:00:00+01:00");
+export const isLaunchDiscountActive = (now = Date.now()) =>
+  now < discountEndsAt;
 export const catalog = {
   creator: {
     name: "Creator",
-    amount: 2000000,
+    get amount() {
+      return isLaunchDiscountActive() ? 1700000 : 2000000;
+    },
     currency: "NGN",
     chatId: env.TELEGRAM_CREATOR_CHAT_ID,
   },
   masterclass: {
     name: "Masterclass",
-    amount: 5000000,
+    get amount() {
+      return isLaunchDiscountActive() ? 4250000 : 5000000;
+    },
     currency: "NGN",
     chatId: env.TELEGRAM_MASTERCLASS_CHAT_ID,
   },

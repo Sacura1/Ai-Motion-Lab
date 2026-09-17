@@ -137,6 +137,8 @@ app.post("/api/payments/initialize", async (req, res) => {
     })
     .parse(req.body);
   const t = catalog[input.track];
+  // Read the date-sensitive price once so the stored order and Paystack charge match.
+  const amount = t.amount;
   const reference = newToken();
   await pool.query(
     "INSERT INTO enrollments(reference,name,email,track,amount,currency,chat_id) VALUES($1,$2,$3,$4,$5,$6,$7)",
@@ -145,7 +147,7 @@ app.post("/api/payments/initialize", async (req, res) => {
       input.name,
       input.email,
       input.track,
-      t.amount,
+      amount,
       t.currency,
       t.chatId,
     ],
@@ -153,7 +155,7 @@ app.post("/api/payments/initialize", async (req, res) => {
   const data = z.object({ authorization_url: z.string().url() }).parse(
     await paystack("/transaction/initialize", {
       email: input.email,
-      amount: t.amount,
+      amount,
       currency: t.currency,
       reference,
       callback_url: new URL("/payment/callback", env.FRONTEND_URL).href,
