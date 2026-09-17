@@ -1,6 +1,15 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { api } from "./lib/api";
-import { tracks, money, type Track } from "./content";
+import {
+  tracks,
+  money,
+  cohortStart,
+  discountDeadline,
+  currentPrice,
+  getDiscountWindow,
+  isDiscountActive,
+  type Track,
+} from "./content";
 import { Arrow, CheckIcon, Modal, TelegramIcon } from "./components";
 import {
   clearPendingCheckout,
@@ -15,10 +24,17 @@ export function Enrollment({
   close: () => void;
 }) {
   const [selected, setSelected] = useState(track);
+  const [now, setNow] = useState(Date.now);
+  const discountActive = isDiscountActive(now);
+  const discountWindow = getDiscountWindow(now);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(readPendingCheckout);
   const submitting = useRef(false);
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (submitting.current) return;
@@ -83,7 +99,16 @@ export function Enrollment({
                 onClick={() => setSelected(id as Track)}
               >
                 {t.name}
-                <strong>{money(t.price)}</strong>
+                <span className="picker-cohort">{cohortStart}</span>
+                {discountActive && (
+                  <span className="picker-original">{money(t.originalPrice)}</span>
+                )}
+                <strong>{money(currentPrice(t, now))}</strong>
+                {discountActive && (
+                  <small>
+                    {t.discountPercent}% off · {discountWindow} · {discountDeadline}
+                  </small>
+                )}
               </button>
             ))}
           </div>
@@ -111,7 +136,9 @@ export function Enrollment({
               Your email identifies your payment and enrollment.
             </p>
             <button className="button primary" disabled={busy}>
-              {busy ? "Opening Paystack…" : `Pay ${money(tracks[selected].price)}`}
+              {busy
+                ? "Opening Paystack…"
+                : `Pay ${money(currentPrice(tracks[selected], now))}`}
               <Arrow />
             </button>
             {error && (
