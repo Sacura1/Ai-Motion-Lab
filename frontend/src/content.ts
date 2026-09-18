@@ -3,8 +3,8 @@ export const tracks = {
   creator: {
     name: "Creator",
     originalPrice: 20000,
-    price: 17000,
-    discountPercent: 15,
+    price: 15000,
+    discountPercent: 25,
     weeks: 2,
     subtitle: "Your first idea. Your first film.",
     description:
@@ -20,8 +20,8 @@ export const tracks = {
   masterclass: {
     name: "Masterclass",
     originalPrice: 50000,
-    price: 42500,
-    discountPercent: 15,
+    price: 37500,
+    discountPercent: 25,
     weeks: 3,
     subtitle: "Create with a professional edge.",
     description:

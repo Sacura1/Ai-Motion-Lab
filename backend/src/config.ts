@@ -22,7 +22,7 @@ export const catalog = {
   creator: {
     name: "Creator",
     get amount() {
-      return isLaunchDiscountActive() ? 1700000 : 2000000;
+      return isLaunchDiscountActive() ? 1500000 : 2000000;
     },
     currency: "NGN",
     chatId: env.TELEGRAM_CREATOR_CHAT_ID,
@@ -30,7 +30,7 @@ export const catalog = {
   masterclass: {
     name: "Masterclass",
     get amount() {
-      return isLaunchDiscountActive() ? 4250000 : 5000000;
+      return isLaunchDiscountActive() ? 3750000 : 5000000;
     },
     currency: "NGN",
     chatId: env.TELEGRAM_MASTERCLASS_CHAT_ID,
