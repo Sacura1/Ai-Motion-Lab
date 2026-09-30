@@ -38,9 +38,9 @@ export const tracks = {
   },
 };
 export const cohortStart = "Cohort 1 starts 1st October";
-export const discountDeadline = "24 September 2026";
-export const discountEndsAt = "2026-09-25T00:00:00+01:00";
-const discountDeadlineDay = Date.UTC(2026, 8, 24);
+export const discountDeadline = "14 October 2026";
+export const discountEndsAt = "2026-10-15T00:00:00+01:00";
+const discountDeadlineDay = Date.UTC(2026, 9, 14);
 const dayMs = 24 * 60 * 60 * 1000;
 export const isDiscountActive = (now = Date.now()) =>
   now < Date.parse(discountEndsAt);
