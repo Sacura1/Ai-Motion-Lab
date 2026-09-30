@@ -37,7 +37,7 @@ export const tracks = {
     outcome: "Take your ideas into commercial production.",
   },
 };
-export const cohortStart = "Cohort 1 starts 1st October";
+export const cohortStart = "Cohort 1 starts 15th October";
 export const discountDeadline = "14 October 2026";
 export const discountEndsAt = "2026-10-15T00:00:00+01:00";
 const discountDeadlineDay = Date.UTC(2026, 9, 14);
